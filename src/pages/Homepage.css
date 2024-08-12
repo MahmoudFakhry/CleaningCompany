@@ -1,0 +1,96 @@
+/* Homepage Styles */
+.homepage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #004d99, #0066cc);
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+  }
+  
+  .homepage-header {
+    margin-top: 90px; /* Ensures content is not hidden behind Navbar */
+    padding: 0 20px;
+  }
+  
+  .homepage-title {
+    font-size: 75px; /* Slightly smaller */
+    font-weight: 900;
+    margin: 0;
+    line-height: 1.2;
+    text-shadow: 4px 4px 15px rgba(0, 0, 0, 0.5);
+  }
+  
+  .homepage-tagline {
+    font-size: 28px; /* Slightly smaller */
+    margin: 20px 0 35px; /* Adjusted margin */
+    font-weight: 300;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .book-now-button {
+    font-size: 28px; /* Slightly smaller */
+    padding: 16px 32px; /* Adjusted padding */
+    color: #fff;
+    background-color: #ff5722;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  
+  .book-now-button:hover {
+    background-color: #ff7043;
+    transform: scale(1.05); /* Slightly smaller scale */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  }
+  
+  .homepage-features {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1100px; /* Slightly smaller max-width */
+    margin: 50px 20px; /* Adjusted margin */
+  }
+  
+  .feature-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 35px; /* Slightly smaller padding */
+    max-width: 330px; /* Slightly smaller max-width */
+    margin: 15px; /* Adjusted margin */
+    text-align: left;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .feature-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .feature-title {
+    font-size: 22px; /* Slightly smaller */
+    font-weight: 600;
+    margin-bottom: 10px; /* Adjusted margin */
+  }
+  
+  .feature-description {
+    font-size: 14px; /* Slightly smaller */
+    line-height: 1.6;
+  }
+  
+  .homepage-footer {
+    margin-top: 60px; /* Adjusted margin-top to push footer down */
+    padding: 15px; /* Adjusted padding */
+    background: #003366;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+  }
+  

@@ -1,0 +1,118 @@
+.contact-us {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #00bcd4, #00796b);
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contact-container {
+    background: #fff;
+    color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    width: 100%;
+  }
+  
+  .contact-intro {
+    margin-bottom: 20px;
+  }
+  
+  .contact-intro p {
+    font-size: 16px;
+    margin: 0;
+  }
+  
+  .contact-intro strong {
+    color: #00bcd4;
+  }
+  
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .form-control.error {
+    border-color: #f44336;
+  }
+  
+  .error-message {
+    color: #f44336;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  
+  .success-message {
+    color: #4caf50;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .contact-button {
+    background: #00bcd4;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .contact-button:hover {
+    background: #0097a7;
+  }
+  
+  .contact-button:disabled {
+    background: #b0bec5;
+    cursor: not-allowed;
+  }
+  
+  .user-profile {
+    background: #f9f9f9;
+    color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .user-profile h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .not-logged-in {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #eee;
+    color: #333;
+    text-align: center;
+  }
+  

@@ -1,0 +1,139 @@
+/* Apply a blue background to the entire website */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #3498db; /* Blue background color */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2c3e50; /* Default text color */
+  }
+  
+  /* Overall container for the team section */
+  .our-team {
+    padding: 60px 20px; /* Adequate padding around the container */
+    background-color: #ecf0f1; /* Light background to contrast with blue elements */
+    border-radius: 12px; /* Rounded corners for the container */
+    max-width: 1200px; /* Max width to keep content centered */
+    margin: 0 auto; /* Center align container */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Soft shadow for elevated effect */
+  }
+  
+  /* Main heading styling specific to OurTeam component */
+  .our-team h1 {
+    font-size: 3rem; /* Large font size for prominence */
+    margin: 60px 0 40px 0; /* Top margin to push the header down, bottom margin for spacing below */
+    padding: 20px 30px; /* Padding around the text */
+    text-align: center; /* Center align the heading */
+    color: #ffffff; /* White text color */
+    font-weight: 700; /* Bold font weight for emphasis */
+    text-transform: uppercase; /* Uppercase text for emphasis */
+    letter-spacing: 2px; /* Increased letter spacing for readability */
+    background: #2980b9; /* Darker blue background color */
+    border-radius: 8px; /* Rounded corners for a softer look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow for a lifted effect */
+  }
+  
+  /* Style for each team section */
+  .team-section {
+    margin-bottom: 50px;
+    background-color: #ffffff; /* Default white background for sections */
+    border-radius: 8px; /* Rounded corners for sections */
+    padding: 20px; /* Padding inside the section */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a subtle 3D effect */
+  }
+  
+  /* Background colors for different teams */
+  .team-section.red {
+    background-color: #f9d5d3; /* Very light red */
+  }
+  
+  .team-section.yellow {
+    background-color: #fef9d7; /* Very light yellow */
+  }
+  
+  .team-section.white {
+    background-color: #ffffff; /* White background */
+  }
+  
+  .team-section.black {
+    background-color: #f4f4f4; /* Very light grey */
+  }
+  
+  .team-section.blue {
+    background-color: #d4e6f1; /* Very light blue */
+  }
+  
+  /* Team name styling */
+  .team-name {
+    font-size: 1.75rem; /* Slightly smaller than the main heading */
+    margin-bottom: 20px; /* Space below team name */
+    color: #2c3e50; /* Dark color for contrast */
+    font-weight: 600; /* Semi-bold font weight */
+  }
+  
+  /* Container for team members */
+  .team-members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid layout */
+    gap: 20px; /* Space between grid items */
+  }
+  
+  /* Individual team member styling */
+  .team-member {
+    background-color: #ffffff; /* White background for each member */
+    border: 1px solid #dcdcdc; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Padding inside the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a card-like effect */
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover transition */
+  }
+  
+  /* Hover effect for team members */
+  .team-member:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+  
+  /* Member name styling */
+  .member-name {
+    font-size: 1.25rem; /* Slightly larger name */
+    font-weight: 600; /* Semi-bold */
+    margin: 0 0 5px 0; /* Space below name */
+  }
+  
+  /* Member title styling */
+  .member-title {
+    font-size: 1rem; /* Standard font size */
+    color: #7f8c8d; /* Subtle gray color for titles */
+    margin: 0 0 10px 0; /* Space below title */
+  }
+  
+  /* Member bio styling */
+  .member-bio {
+    font-size: 0.875rem; /* Smaller font size for bio */
+    color: #95a5a6; /* Light gray color for text */
+    margin: 0;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .team-name {
+      font-size: 1.5rem; /* Adjust font size for smaller screens */
+    }
+  
+    .team-member {
+      padding: 15px; /* Adjust padding for smaller screens */
+    }
+  
+    .member-name {
+      font-size: 1.1rem; /* Adjust font size for member names */
+    }
+  
+    .member-title {
+      font-size: 0.9rem; /* Adjust font size for titles */
+    }
+  
+    .member-bio {
+      font-size: 0.8rem; /* Adjust font size for bios */
+    }
+  }
+  

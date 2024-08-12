@@ -1,0 +1,115 @@
+/* Navbar Styles */
+.navbar {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #fff;
+    padding: 8px 0; /* Reduced padding */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Slightly smaller shadow */
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .navbar-logo {
+    font-size: 28px; /* Reduced font size */
+    font-weight: 900;
+    color: #f8f8f8;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .navbar-logo:hover {
+    color: #ffcc00;
+  }
+  
+  .navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 10px; /* Reduced gap */
+  }
+  
+  .navbar-item {
+    position: relative;
+  }
+  
+  .navbar-link {
+    color: #f8f8f8;
+    text-decoration: none;
+    padding: 8px 16px; /* Reduced padding */
+    display: block;
+    font-size: 14px; /* Reduced font size */
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 6px;
+  }
+  
+  .navbar-link:hover,
+  .navbar-item:hover .navbar-link {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffcc00;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: #f8f8f8;
+    font-size: 14px; /* Reduced font size */
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(0,0,0,0.9);
+    min-width: 140px; /* Reduced min-width */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Slightly smaller shadow */
+  }
+  
+  .dropdown-menu .dropdown-link {
+    color: #f8f8f8;
+    text-decoration: none;
+    padding: 8px 16px; /* Reduced padding */
+    display: block;
+    font-size: 12px; /* Reduced font size */
+    transition: background-color 0.3s;
+    border-bottom: 1px solid #333;
+  }
+  
+  .dropdown-menu .dropdown-link:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdown-menu .dropdown-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
