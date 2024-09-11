@@ -81,7 +81,7 @@ body {
   .team-member {
     background-color: #ffffff; /* White background for each member */
     border: 1px solid #dcdcdc; /* Light border */
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 15px; /* Rounded corners */
     padding: 20px; /* Padding inside the card */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a card-like effect */
     transition: transform 0.3s, box-shadow 0.3s; /* Smooth hover transition */

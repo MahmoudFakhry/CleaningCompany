@@ -1,9 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import './Homepage.css';
 
 const Homepage = () => {
-  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const loggedIn = localStorage.getItem('loggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+    };
+
+    checkLoginStatus();
+
+    window.addEventListener('storage', checkLoginStatus);
+
+    return () => {
+      window.removeEventListener('storage', checkLoginStatus);
+    };
+  }, []);
 
   return (
     <div className="homepage">
@@ -27,11 +42,13 @@ const Homepage = () => {
           <p className="feature-description">Our cleaning experts are highly trained and experienced, providing exceptional service every time.</p>
         </div>
       </section>
-      {!isLoggedIn && (
-        <div className="login-message">
+      <div className="login-message">
+        {isLoggedIn ? (
+          <p>You are logged in.</p>
+        ) : (
           <p>You need to log in to access additional features.</p>
-        </div>
-      )}
+        )}
+      </div>
       <footer className="homepage-footer">
         <p>Clean 2024 &copy; All Rights Reserved</p>
       </footer>

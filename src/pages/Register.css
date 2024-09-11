@@ -1,129 +1,170 @@
-/* General Styles */
+/* Register.css */
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #1abc9c; /* Teal background color */
-  }
-  
-  .register-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #e3f2fd; /* Light blue background for the page container */
-    padding-top: 80px; /* Adds space at the top of the page */
-  }
-  
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f9;
+  margin: 0;
+  padding: 0;
+}
+
+.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0 20px;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  text-align: center;
+}
+
+.register-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.success-message, .error-message {
+  font-size: 16px;
+  margin: 15px 0;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.success-message {
+  color: #28a745;
+  background-color: #d4edda;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+}
+
+.register-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  margin: 0 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-button.active, .toggle-button:hover {
+  background-color: #0056b3;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.form-control.error {
+  border-color: #dc3545;
+}
+
+.register-button, .login-button, .logout-button, .forgot-password-button, .signup-button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px; /* Added spacing between buttons */
+}
+
+.register-button:hover, .login-button:hover, .logout-button:hover, .forgot-password-button:hover, .signup-button:hover {
+  background-color: #0056b3;
+}
+
+.footer-buttons {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+  position: fixed;
+  bottom: 20px; /* Position the footer at the bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Center the footer horizontally */
+}
+
+.logout-button {
+  background-color: #dc3545;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+.forgot-password-button {
+  background-color: #6c757d;
+}
+
+.forgot-password-button:hover {
+  background-color: #5a6268;
+}
+
+.verification-status, .success-status {
+  margin-top: 20px;
+}
+
+.verification-status p, .success-status p {
+  font-size: 18px;
+  color: #333;
+}
+
+@media (max-width: 600px) {
   .register-container {
-    background: #ffffff; /* White background for the container */
+    width: 90%;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 500px;
-    margin: 0 20px 20px; /* Adjusted margin to remove bottom spacing */
-  }
-  
-  .register-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333; /* Dark text for better readability */
-  }
-  
-  .register-toggle {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
   }
   
   .toggle-button {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #ffffff; /* White background */
-    color: #333; /* Dark text color */
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    padding: 10px;
+    margin: 5px;
   }
-  
-  .toggle-button.active {
-    background-color: #2196f3; /* Blue background for active button */
-    color: #fff; /* White text color for active button */
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #333; /* Dark text color */
-  }
-  
+
   .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #90caf9; /* Light blue border */
-    border-radius: 5px;
     font-size: 14px;
-    background-color: #ffffff; /* White background for input fields */
-  }
-  
-  .form-control.error {
-    border-color: #f44336; /* Red border for errors */
-  }
-  
-  .error-message {
-    color: #f44336; /* Red color for error messages */
-    font-size: 12px;
-    margin-top: 5px;
-  }
-  
-  .register-button,
-  .login-button {
-    width: 100%;
     padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #2196f3; /* Blue background */
-    color: #fff; /* White text */
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
   }
-  
-  .register-button:hover,
-  .login-button:hover {
-    background-color: #1976d2; /* Darker blue on hover */
+
+  .register-button, .login-button, .logout-button, .forgot-password-button, .signup-button {
+    padding: 10px 15px;
   }
-  
-  .success-message {
-    color: #4caf50; /* Green color for success messages */
-    font-size: 14px;
-    margin-top: 15px;
-    text-align: center;
-  }
-  
-  .logout-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #f44336; /* Red background */
-    color: #fff; /* White text */
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
-  }
-  
-  .logout-button:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-  }
-  
+}
+

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Info.css'; // Import the CSS file
+import './Info.css';
 
 const TermsOfService = () => {
   const [showTOS, setShowTOS] = useState(true);

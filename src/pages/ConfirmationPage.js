@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import './ConfirmationPage.css'; // Ensure this path is correct
+import './ConfirmationPage.css';  
 
 const ConfirmationPage = () => {
   const location = useLocation();
@@ -8,7 +8,6 @@ const ConfirmationPage = () => {
   const [resendMessage, setResendMessage] = useState('');
 
   const handleResend = () => {
-    // Logic to resend the verification message would go here
     setResendMessage(`A new verification link has been sent to your ${verificationMethod}.`);
   };
 

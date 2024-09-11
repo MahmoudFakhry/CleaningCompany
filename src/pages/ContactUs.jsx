@@ -14,7 +14,7 @@ const ContactUs = () => {
   useEffect(() => {
     if (isLoggedIn) {
       const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
+      if (user && user.username) {
         setUserName(user.username);
       }
     }
@@ -33,7 +33,7 @@ const ContactUs = () => {
     if (Object.keys(newErrors).length === 0) {
       setLoading(true);
       try {
-        // Simulate sending the message
+     
         await new Promise((resolve) => setTimeout(resolve, 1000));
         setSuccessMessage('Message sent successfully!');
         setMessage('');
@@ -47,7 +47,13 @@ const ContactUs = () => {
     }
   };
 
-
+  if (!isLoggedIn) {
+    return (
+      <div className="not-logged-in">
+        <h1>Please log in to access additional features.</h1>
+      </div>
+    );
+  }
 
   return (
     <div className="contact-us">

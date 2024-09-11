@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './OurTeam.css';
 
-// Updated team members with two members per team and additional details
 const teamMembers = {
   Red: [
     { id: '1', firstName: 'John', lastName: 'Doe', title: 'Lead Developer', bio: 'John has over 10 years of experience in software development.' },

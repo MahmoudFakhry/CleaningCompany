@@ -11,6 +11,7 @@ import ErrorPage from './pages/ErrorPage';
 import ThankYou from './pages/ThankYou';
 import Payment from './pages/Payment';
 import ConfirmationPage from './pages/ConfirmationPage';
+import ForgotPassword from './pages/ForgotPassword';
 
 const App = () => {
   return (
@@ -18,7 +19,6 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/payment" element={<Payment />} />
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/register" element={<Register />} />
         <Route path="/book" element={<Booking />} />
@@ -26,6 +26,7 @@ const App = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/info" element={<Info />} />
         <Route path="/confirmation" element={<ConfirmationPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

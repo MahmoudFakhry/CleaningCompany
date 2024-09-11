@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, createUserWithEmailAndPassword, sendEmailVerification } from '../firebaseConfig';
 import Navbar from '../components/Navbar';
+import { auth } from './firebaseConfig';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut,
+  deleteUser,
+} from 'firebase/auth';
 import './Register.css';
 
 const Register = () => {
@@ -18,20 +25,55 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  const [currentStep, setCurrentStep] = useState('register');
+  const [currentStep, setCurrentStep] = useState('register'); 
   const [countdown, setCountdown] = useState(60);
-  const [verificationSent, setVerificationSent] = useState(false);
   const [error, setError] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false); 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    
+    const storedLoggedIn = localStorage.getItem('loggedIn') === 'true';
+    setLoggedIn(storedLoggedIn);
+
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user && user.emailVerified) {
+        setLoggedIn(true);
+        localStorage.setItem('loggedIn', 'true');
+      } else {
+        setLoggedIn(false);
+        localStorage.setItem('loggedIn', 'false');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (currentStep === 'verify') {
       const timer = setInterval(() => {
         setCountdown((prevCountdown) => {
           if (prevCountdown <= 1) {
-            setCurrentStep('register');
-            setSuccessMessage('Verification time expired. Please register again.');
-            setError('');
+          
+            const user = auth.currentUser;
+            if (user) {
+              deleteUser(user)
+                .then(() => {
+                  setCurrentStep('register');
+                  
+                  setError('Verification time expired. Please register again.');
+                  localStorage.removeItem('loggedIn');
+                  setLoggedIn(false);
+                })
+                .catch((err) => {
+                  setError(err.message);
+                });
+            } else {
+              setCurrentStep('register');
+              setSuccessMessage('Verification time expired. Please register again.');
+              setError('');
+            }
             clearInterval(timer);
             return 60;
           }
@@ -43,8 +85,34 @@ const Register = () => {
     }
   }, [currentStep]);
 
+  useEffect(() => {
+    if (registrationSuccess) {
+      const timer = setTimeout(() => {
+        setRegistrationSuccess(false);
+        setCurrentStep('register');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [registrationSuccess]);
+
+  useEffect(() => {
+    if (verificationSent && currentStep === 'verify') {
+      const checkVerification = setInterval(async () => {
+        const user = auth.currentUser;
+        await user.reload();
+        if (user.emailVerified) {
+          setRegistrationSuccess(true);
+          setCurrentStep('success');
+          clearInterval(checkVerification);
+        }
+      }, 1000);
+      return () => clearInterval(checkVerification);
+    }
+  }, [verificationSent, currentStep]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setError('');
     if (isRegistering) {
       setFormData({ ...formData, [name]: value });
     } else {
@@ -59,15 +127,18 @@ const Register = () => {
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
-
+  
     if (Object.keys(newErrors).length === 0) {
       try {
+   
         const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+       
         await sendEmailVerification(userCredential.user);
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('user', JSON.stringify({ username: formData.username, email: formData.email }));
         setVerificationSent(true);
+        setSuccessMessage('Account successfully created! You can return to Home now.');
         setCurrentStep('verify');
-        setSuccessMessage('Registration successful! Please check your email for verification.');
-        setError('');
         setFormData({ username: '', email: '', password: '', confirmPassword: '' });
         setErrors({});
       } catch (error) {
@@ -78,25 +149,42 @@ const Register = () => {
       setErrors(newErrors);
     }
   };
+  
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!loginData.email) newErrors.email = 'Email is required';
     if (!loginData.password) newErrors.password = 'Password is required';
 
     if (Object.keys(newErrors).length === 0) {
-      // Perform login logic here
-      setSuccessMessage('Login successful!');
-      setLoginData({ email: '', password: '' });
-      setErrors({});
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
+        if (userCredential.user.emailVerified) {
+          setLoggedIn(true);
+          localStorage.setItem('loggedIn', 'true'); 
+          setSuccessMessage('Login Successful!');
+          setLoginData({ email: '', password: '' });
+          setErrors({});
+      
+          setTimeout(() => {
+            navigate('/'); 
+          }, 0); 
+        } else {
+          setError('Please verify your email before logging in.');
+        }
+      } catch (error) {
+        setError(error.message);
+      }
     } else {
       setErrors(newErrors);
     }
   };
 
-  const handleLogout = () => {
-    // Perform logout logic here
+  const handleLogout = async () => {
+    await signOut(auth);
+    localStorage.removeItem('loggedIn'); 
+    setLoggedIn(false);
     navigate('/');
   };
 
@@ -105,15 +193,34 @@ const Register = () => {
       <Navbar />
       <div className="register-container">
         <h1 className="register-title">
-          {currentStep === 'register' ? (isRegistering ? 'Create an Account' : 'Log In') : 'Check Your Email'}
+          {currentStep === 'register'
+            ? isRegistering
+              ? 'Create an Account'
+              : 'Log In'
+            : 'Check Your Email'}
         </h1>
+        {registrationSuccess && <p className="success-message">{successMessage}</p>}
         <div className="register-toggle">
-          {currentStep === 'register' && (
+          {currentStep === 'register' && !loggedIn && (
             <>
-              <button onClick={() => setIsRegistering(true)} className={`toggle-button ${isRegistering ? 'active' : ''}`}>
+              <button
+                onClick={() => {
+                  setIsRegistering(true);
+                  setErrors({});
+                  setError('');
+                }}
+                className={`toggle-button ${isRegistering ? 'active' : ''}`}
+              >
                 Sign Up
               </button>
-              <button onClick={() => setIsRegistering(false)} className={`toggle-button ${!isRegistering ? 'active' : ''}`}>
+              <button
+                onClick={() => {
+                  setIsRegistering(false);
+                  setErrors({});
+                  setError(''); 
+                }}
+                className={`toggle-button ${!isRegistering ? 'active' : ''}`}
+              >
                 Log In
               </button>
             </>
@@ -170,11 +277,13 @@ const Register = () => {
                 />
                 {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
               </div>
+              <button type="submit" className="submit-button">
+                Register
+              </button>
               {error && <span className="error-message">{error}</span>}
-              <button type="submit" className="register-button">Register</button>
             </form>
           ) : (
-            <form onSubmit={handleLoginSubmit} className="login-form">
+            <form onSubmit={handleLoginSubmit} className="register-form">
               <div className="form-group">
                 <label htmlFor="email">Email</label>
                 <input
@@ -199,19 +308,30 @@ const Register = () => {
                 />
                 {errors.password && <span className="error-message">{errors.password}</span>}
               </div>
-              {errors.general && <span className="error-message">{errors.general}</span>}
-              <button type="submit" className="login-button">Log In</button>
+              <button type="submit" className="submit-button">Log In</button>
+              <button
+                type="button"
+                className="forgot-password-button"
+                onClick={() => navigate('/forgot-password')} 
+              > 
+
+
+                Forgot Password?
+              </button>
+              {error && <span className="error-message">{error}</span>}
             </form>
           )
         ) : (
-          <div className="verify-container">
-            <p className="verify-message">Please check your email for the verification link. You have {countdown} seconds remaining.</p>
-            {successMessage && <p className="success-message">{successMessage}</p>}
-            {error && <p className="error-message">{error}</p>}
+          <div className="verify-message">
+            <p>Please check your email for verification. You have {countdown} seconds remaining.</p>
           </div>
         )}
-        <button onClick={handleLogout} className="logout-button">Log Out</button>
       </div>
+      {loggedIn && (
+        <button onClick={handleLogout} className="logout-button">
+          Log Out
+        </button>
+      )}
     </div>
   );
 };

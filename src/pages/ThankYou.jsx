@@ -1,31 +1,42 @@
-// ThankYou.jsx
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './ThankYou.css'; // Ensure this file exists and is correctly linked
+
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { collection, addDoc } from 'firebase/firestore'; 
+import { db } from './firebaseConfig';
+import './ThankYou.css';
 
 const ThankYou = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const {
-    totalCostLow,
-    totalCostHigh,
-    estimatedHoursLow,
-    estimatedHoursHigh
-  } = location.state || {}; // Default to an empty object if no state is provided
+  const { state } = location;
+  const { formData, totalCostLow, totalCostHigh, estimatedHoursLow, estimatedHoursHigh } = state || {};
 
-  const handleBackToHome = () => {
-    navigate('/'); // Redirect to the home page
-  };
+  useEffect(() => {
+    const finalizeBooking = async () => {
+      if (formData) {
+        try {
+          await addDoc(collection(db, 'finalizedBookings'), {
+            ...formData,
+            totalCostLow,
+            totalCostHigh,
+            estimatedHoursLow,
+            estimatedHoursHigh,
+            timestamp: new Date(),
+          });
+          console.log('Booking finalized successfully!');
+        } catch (error) {
+          console.error('Error finalizing booking:', error);
+        }
+      }
+    };
+
+    finalizeBooking();
+  }, [formData, totalCostLow, totalCostHigh, estimatedHoursLow, estimatedHoursHigh]);
 
   return (
     <div className="thank-you-container">
-      <h1>Thank You!</h1>
-      <p>Your payment has been successfully processed. We appreciate your business!</p>
-      <p>
-        We charge $45 per hour, and based on the information you provided, you will likely be charged between ${totalCostLow} and ${totalCostHigh}.
-        It will take approximately between {estimatedHoursLow} and {estimatedHoursHigh} hours. This is subject to change.
-      </p>
-      <button onClick={handleBackToHome} className="home-button">Back to Home</button>
+      <h2>Thank You for Your Booking!</h2>
+      <p>Your booking has been successfully processed.</p>
+     
     </div>
   );
 };

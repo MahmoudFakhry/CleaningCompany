@@ -1,9 +1,10 @@
-// Payment.jsx
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from './firebaseConfig'; 
 import './Payment.css';
 
-const Payment = () => {
+const Payment = ({ onBack2, formData }) => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
   const [cvv, setCvv] = useState('');
@@ -36,24 +37,31 @@ const Payment = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validatePayment()) {
-      // Example cost and time calculation
-      const hourlyRate = 45; // $45 per hour
-      const estimatedHoursLow = 2; // Example lower range of hours
-      const estimatedHoursHigh = 4; // Example higher range of hours
+      const hourlyRate = 45;  
+      const estimatedHoursLow = 2;  
+      const estimatedHoursHigh = 4; 
       const totalCostLow = hourlyRate * estimatedHoursLow;
       const totalCostHigh = hourlyRate * estimatedHoursHigh;
 
-      navigate('/thank-you', {
-        state: {
+      try {
+        await addDoc(collection(db, 'bookings'), {
+          ...formData,
+          cardNumber,
+          expiryDate,
           totalCostLow,
           totalCostHigh,
-          estimatedHoursLow,
-          estimatedHoursHigh
-        }
-      });
+          timestamp: new Date(), // Add a timestamp
+        });
+        console.log('Booking saved successfully!');
+      } catch (error) {
+        console.error('Error saving booking:', error);
+      }
+
+      // Navigate to the thank-you page with formData passed in the state
+      navigate('/thank-you', { state: { formData, totalCostLow, totalCostHigh, estimatedHoursLow, estimatedHoursHigh } });
     }
   };
 
@@ -97,7 +105,10 @@ const Payment = () => {
           />
           {errors.cvv && <div className="error-message">{errors.cvv}</div>}
         </div>
-        <button type="submit" className="submit-button">Submit Payment</button>
+        <div className="button-group">
+          <button type="button" onClick={onBack2} className="nav-button">Back</button>
+          <button type="submit" className="submit-button">Submit Payment</button>
+        </div>
       </form>
     </div>
   );

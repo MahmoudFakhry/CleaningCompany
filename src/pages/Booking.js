@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Scheduling from './Scheduling';
 import Payment from './Payment';
+import AddressQuestion from './AddressQuestion';
 import './BookingPage.css';
 
-const questions = [
 
-{
+
+const questions = [
+  {
+    id: 'name',
+    text: 'What is your full name?',
+    type: 'text',
+  },
+  {
     id: 'team',
     text: 'What team would you like?',
     options: ['Red 🔴', 'Blue 🔵', 'Yellow 🟡', 'White ⚪', 'Black ⚫', 'Any team 🎨'],
@@ -21,7 +29,6 @@ const questions = [
     text: 'What rooms do we clean?',
     options: [
       { value: 'Entire House', emoji: '🏠' },
-      
       { value: 'Living Room', emoji: '🛋️' },
       { value: 'Bedroom', emoji: '🛏️' },
       { value: 'Kitchen', emoji: '🍽️' },
@@ -67,14 +74,10 @@ const questions = [
   },
   {
     id: 'additionalInfo',
-    text: 'Any other information you would like to provide? If not say "No"',
+    text: 'Any other information you would like to provide?',
     type: 'text',
   },
-  
-
-
 ];
-
 const Booking = () => {
   const [formData, setFormData] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -83,7 +86,23 @@ const Booking = () => {
   const [showScheduling, setShowScheduling] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [showPopup, setShowPopup] = useState(true);
+  
+  const isLoggedIn = localStorage.getItem('loggedIn') === 'true';
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      return;
+    }
+  }, [isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="not-logged-in">
+        <h1>Please log in to access additional features.</h1>
+      </div>
+    );
+  }
+  
   const handleAgree = () => {
     setShowPopup(false);
   };
@@ -149,6 +168,10 @@ const Booking = () => {
 
   const validateCurrentQuestion = () => {
     const question = questions[currentQuestion];
+    if (question.id === 'additionalInfo') {
+      return true;
+    }
+  
     if (question.type === 'radio' || question.type === 'checkbox') {
       if (!formData[question.id] || (Array.isArray(formData[question.id]) && formData[question.id].length === 0)) {
         setErrors({ [question.id]: 'This field is required.' });
@@ -161,16 +184,32 @@ const Booking = () => {
       setErrors({ [question.id]: 'This field is required.' });
       return false;
     } else if (question.type === 'address') {
-      const addressFields = ['street', 'city', 'state', 'zip'];
-      for (const field of addressFields) {
-        if (!formData.address || !formData.address[field]) {
-          setErrors({ [question.id]: 'All address fields are required.' });
-          return false;
-        }
-      }
+      return validateAddress();
     }
     return true;
   };
+  
+
+  const validateAddress = () => {
+    const { address } = formData;
+  
+    if (!address || !address.street || !address.city || !address.state || !address.zip) {
+      setErrors({ address: 'All address fields are required.' });
+      return false;
+    }
+  
+    const targetZipCode = 97229;
+    const inputZipCode = parseInt(address.zip, 10);
+  
+   
+    if (Math.abs(inputZipCode - targetZipCode) > 100) {
+      setErrors({ address: 'Sorry, you\'re out of bounds.' });
+      return false;
+    }
+  
+    return true;
+  };
+  
 
   const renderQuestion = (question) => {
     switch (question.type) {
@@ -239,20 +278,43 @@ const Booking = () => {
               value={formData[question.id] || question.min}
               onChange={handleChange}
             />
-            <div className="range-label">{formData[question.id] || question.min} sq ft</div>
+            <div className="range-label">{formData[question.id] || question.min} sq. ft.</div>
           </div>
         );
-      case 'number':
+      case 'yesNo':
         return (
           <div>
             <p className="question-text">{question.text}</p>
-            <input
-              type="number"
-              className="text-input"
-              name={question.id}
-              value={formData[question.id] || ''}
-              onChange={handleChange}
-            />
+            <label className="option-label">
+              <input
+                type="radio"
+                name={question.id}
+                value="Yes"
+                checked={formData[question.id] === 'Yes'}
+                onChange={handleChange}
+              />
+              Yes
+            </label>
+            <label className="option-label">
+              <input
+                type="radio"
+                name={question.id}
+                value="No"
+                checked={formData[question.id] === 'No'}
+                onChange={handleChange}
+              />
+              No
+            </label>
+            {formData[question.id] === 'Yes' && (
+              <input
+                type="text"
+                className="text-input"
+                name="petDetails"
+                placeholder="Please provide details about your pets"
+                value={formData.petDetails || ''}
+                onChange={handleChange}
+              />
+            )}
           </div>
         );
       case 'text':
@@ -265,125 +327,90 @@ const Booking = () => {
               name={question.id}
               value={formData[question.id] || ''}
               onChange={handleChange}
-              placeholder={question.id === 'zip' ? 'Enter ZIP code' : ''}
             />
-          </div>
-        );
-      case 'yesNo':
-        return (
-          <div>
-            <p className="question-text">{question.text}</p>
-            <div className="options-container">
-              <label className="option-label">
-                <input
-                  type="radio"
-                  name={question.id}
-                  value="Yes"
-                  checked={formData[question.id] === 'Yes'}
-                  onChange={handleChange}
-                />
-                Yes
-              </label>
-              <label className="option-label">
-                <input
-                  type="radio"
-                  name={question.id}
-                  value="No"
-                  checked={formData[question.id] === 'No'}
-                  onChange={handleChange}
-                />
-                No
-              </label>
-            </div>
-            {formData[question.id] === 'Yes' && (
-              <input
-                type="text"
-                className="text-input"
-                name="petsDetails"
-                placeholder="Please specify your pets"
-                value={formData['petsDetails'] || ''}
-                onChange={handleChange}
-              />
-            )}
           </div>
         );
       case 'address':
         return (
-          <div>
-            <p className="question-text">{question.text}</p>
-            <input
-              type="text"
-              className="text-input"
-              name="street"
-              placeholder="Street Address"
-              value={formData.address?.street || ''}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              className="text-input"
-              name="city"
-              placeholder="City"
-              value={formData.address?.city || ''}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              className="text-input"
-              name="state"
-              placeholder="State"
-              value={formData.address?.state || ''}
-              onChange={handleAddressChange}
-            />
-            <input
-              type="text"
-              className="text-input"
-              name="zip"
-              placeholder="ZIP Code"
-              value={formData.address?.zip || ''}
-              onChange={handleAddressChange}
-            />
-          </div>
+          <AddressQuestion
+            formData={formData.address || {}}
+            handleChange={handleAddressChange}
+            setValidateCurrentQuestion={(isValid) => {
+              if (isValid) {
+                setErrors((prevErrors) => {
+                  const { address, ...rest } = prevErrors;
+                  return rest;
+                });
+              } else {
+                setErrors((prevErrors) => ({
+                  ...prevErrors,
+                  address: 'All address fields are required.',
+                }));
+              }
+            }}
+          />
         );
       default:
         return null;
     }
   };
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
-
   return (
-    <div className="booking-form">
+    <div className="booking-container">
       {showPopup && (
-        <div className="popup-overlay">
+        <div className="popup">
           <div className="popup-content">
-            <h2>Agreement Required</h2>
-            <p>By Clicking Agree, you agree to all thex <a href="/info" target="_blank" rel="noopener noreferrer">Terms Of Service</a></p>
-            <button onClick={handleAgree}>I Agree</button>
+            <p className="popup-text">By Clicking Agree, You Comply With our Terms Of Service.</p>
+            <button onClick={handleAgree}>Agree</button>
           </div>
         </div>
       )}
-      <div className="progress-bar-container">
-        <div
-          className="progress-bar"
-          style={{ width: `${progress}%` }}
-        />
+      <div className={`question-container ${showPopup ? 'hide-questions' : 'show-questions'}`}>
+        {!showPopup && !showScheduling && !showPayment && (
+          <>
+            {currentQuestion < questions.length ? (
+              <>
+                {renderQuestion(questions[currentQuestion])}
+                <div className="navigation-buttons">
+                  <button onClick={handlePrevious} disabled={currentQuestion === 0}>
+                    Previous
+                  </button>
+                  <button onClick={handleNext}>
+                    {currentQuestion === questions.length - 1 ? 'Finish' : 'Next'}
+                  </button>
+                </div>
+                {errors[questions[currentQuestion].id] && (
+                  <p className="error-text">{errors[questions[currentQuestion].id]}</p>
+                )}
+              </>
+            ) : (
+              <div>
+                <h2>Booking Complete!</h2>
+                <button onClick={() => setShowScheduling(true)}>Proceed to Scheduling</button>
+              </div>
+            )}
+          </>
+        )}
+        {showScheduling && !showPayment && (
+          <Scheduling
+            onBack={() => {
+              setShowScheduling(false);
+              setCompleted(false);
+              setCurrentQuestion(0);
+            }}
+            formData={formData} 
+          />
+        )}
+        {showPayment && (
+          <Payment
+            onBack2={() => {
+              setShowPayment(false);
+              setShowScheduling(true);
+            }}
+            formData={formData}  
+          />
+        )}
       </div>
-      {!completed ? (
-        <div className="question-container">
-          {renderQuestion(questions[currentQuestion])}
-          <div className="button-group">
-            {currentQuestion > 0 && <button onClick={handlePrevious}>Previous</button>}
-            <button onClick={handleNext}>{currentQuestion === questions.length - 1 ? 'Submit' : 'Next'}</button>
-          </div>
-          {errors[questions[currentQuestion]?.id] && <p className="error">{errors[questions[currentQuestion]?.id]}</p>}
-        </div>
-      ) : (
-        <>
-          {showScheduling && <Scheduling />}
-          {showPayment && <Payment />}
-        </>
-      )}
     </div>
   );
 };
